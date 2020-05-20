@@ -1,6 +1,7 @@
 class TodoItem {
   String title;
-  TodoItem(this.title);
+  int id;
+  TodoItem(this.title, this.id);
 
   String getTitle() => this.title;
 }

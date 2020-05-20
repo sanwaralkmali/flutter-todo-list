@@ -1,15 +1,8 @@
 import 'package:flutter/material.dart';
 import 'history-page.dart';
 import 'todo-item.dart';
-import 'todo-dismissable-widget.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-List<Widget> _list = [];
-
-String newTodo = '';
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -21,7 +14,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'TODO'),
+      home: MyHomePage(
+        title: 'TODO',
+      ),
       debugShowCheckedModeBanner: false,
     );
   }
@@ -31,25 +26,26 @@ class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
 
   final String title;
-
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
   bool wrongInput = false;
-
+/*
   void _addNewToDoItem() {
     setState(() {
-      _list.add(
-        ToDoDissmissable(
-          TodoItem(newTodo),
-        ),
+      widget.list.add(
+        Dissmis(setState, TodoItem(newTodo)),
       );
+      widget.list.add(
+        Text(indexM.toString()),
+      );
+
       wrongInput = false;
     });
   }
-
+*/
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,9 +89,9 @@ class _MyHomePageState extends State<MyHomePage> {
         child: SafeArea(
           child: ListView.builder(
             scrollDirection: Axis.vertical,
-            itemCount: _list.length,
+            itemCount: 5,
             itemBuilder: (context, index) {
-              return _list[index];
+              return Container();
             },
           ),
         ),
@@ -115,7 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       children: [
                         TextField(
                           onChanged: (text) {
-                            newTodo = text;
+                            // newTodo = text;
                           },
                         ),
                         Visibility(
@@ -132,6 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     actions: [
                       FlatButton(
                         onPressed: () {
+                          /*
                           if (newTodo == '') {
                             setState(() {
                               wrongInput = true;
@@ -141,14 +138,17 @@ class _MyHomePageState extends State<MyHomePage> {
                             newTodo = '';
                             Navigator.of(context).pop();
                           }
+                        */
                         },
                         child: Text('Okay'),
                       ),
                       FlatButton(
                         onPressed: () {
+                          /*
                           wrongInput = false;
                           newTodo = '';
                           Navigator.of(context).pop();
+                       */
                         },
                         child: Text('Cancel'),
                       ),
@@ -166,6 +166,51 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-// TODO : Add a menu to Your AppBar
+// TODO : implement the onDismissed hundler and remove the dismissable widegt from your list
 // TODO : Fix the History Page
 // TODO : Start SQLight to store your app info
+
+/****************************** *********************************/
+
+/*
+Widget Dissmis(setState, todoItem) {
+  return Dismissible(
+    key: Key(todoItem.hashCode.toString()),
+    child: Container(
+      margin: EdgeInsets.all(2),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(
+          const Radius.circular(7.0),
+        ),
+        shape: BoxShape.rectangle,
+        border: Border.all(),
+        color: Colors.lightGreen.shade100,
+      ),
+      child: ListTile(
+        isThreeLine: true,
+        subtitle: Text('Detailes'),
+        title: Text(
+          todoItem.getTitle(),
+          style: TextStyle(
+            fontSize: 20.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        trailing: Checkbox(
+          value: boxStatus,
+          onChanged: (bool changeState) {
+            setState(() {
+              boxStatus = !boxStatus;
+              print(boxStatus);
+            });
+          },
+        ),
+      ),
+    ),
+    onDismissed: (direction) => print(''),
+    background: Container(
+      color: Colors.green,
+    ),
+  );
+}
+*/
