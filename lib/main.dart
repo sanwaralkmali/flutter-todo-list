@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'history-page.dart';
-import 'todo-item.dart';
+import 'package:todo/todo-item.dart';
+
+import 'build_item.dart';
+import 'floating_doalog.dart';
+import 'my_app_bar.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -31,54 +33,27 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  bool wrongInput = false;
-/*
-  void _addNewToDoItem() {
-    setState(() {
-      widget.list.add(
-        Dissmis(setState, TodoItem(newTodo)),
-      );
-      widget.list.add(
-        Text(indexM.toString()),
-      );
+  List<TodoItem> items = new List<TodoItem>();
 
-      wrongInput = false;
+  void refreshItems(items) {
+    setState(() {
+      this.items = items;
     });
   }
-*/
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          FlatButton(
-            padding: EdgeInsets.all(0),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SecondRoute(),
-                ),
-              );
-            },
-            child: Icon(
-              Icons.history,
-              color: Colors.red.shade100,
-              size: 36.0,
-            ),
-          ),
-        ],
-        backgroundColor: Colors.blueGrey.shade800,
-        title: Text(
-          widget.title,
-          style: TextStyle(
-              fontFamily: 'Righteous',
-              fontWeight: FontWeight.w100,
-              fontSize: 42.0,
-              color: Colors.red.shade100,
-              letterSpacing: 3.0),
-        ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          setState(() {
+            showdialog(context, items, setState, refreshItems);
+          });
+        },
+        tooltip: 'Increment',
+        child: Icon(Icons.add),
       ),
+      appBar: myappBar(context, widget.title),
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -87,130 +62,30 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         child: SafeArea(
-          child: ListView.builder(
-            scrollDirection: Axis.vertical,
-            itemCount: 5,
-            itemBuilder: (context, index) {
-              return Container();
-            },
-          ),
+          child: renderBody(),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return StatefulBuilder(
-                builder: (context, setState) {
-                  return AlertDialog(
-                    title: new Text('Add new Todo'),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TextField(
-                          onChanged: (text) {
-                            // newTodo = text;
-                          },
-                        ),
-                        Visibility(
-                          child: Text(
-                            'Enter a title ',
-                            style: TextStyle(
-                              color: Colors.red,
-                            ),
-                          ),
-                          visible: wrongInput,
-                        ),
-                      ],
-                    ),
-                    actions: [
-                      FlatButton(
-                        onPressed: () {
-                          /*
-                          if (newTodo == '') {
-                            setState(() {
-                              wrongInput = true;
-                            });
-                          } else {
-                            _addNewToDoItem();
-                            newTodo = '';
-                            Navigator.of(context).pop();
-                          }
-                        */
-                        },
-                        child: Text('Okay'),
-                      ),
-                      FlatButton(
-                        onPressed: () {
-                          /*
-                          wrongInput = false;
-                          newTodo = '';
-                          Navigator.of(context).pop();
-                       */
-                        },
-                        child: Text('Cancel'),
-                      ),
-                    ],
-                  );
-                },
-              );
-            },
-          );
-        },
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
       ),
     );
   }
+
+  Widget renderBody() {
+    if (items.length > 0) {
+      return buildListView();
+    } else {
+      return emptyList();
+    }
+  }
+
+  Widget buildListView() {
+    return ListView.builder(
+      itemCount: items.length,
+      itemBuilder: (BuildContext context, int index) {
+        return buildItem(items[index], index, items, setState);
+      },
+    );
+  }
+
+  Widget emptyList() {
+    return Center(child: Text('No items'));
+  }
 }
-
-// TODO : implement the onDismissed hundler and remove the dismissable widegt from your list
-// TODO : Fix the History Page
-// TODO : Start SQLight to store your app info
-
-/****************************** *********************************/
-
-/*
-Widget Dissmis(setState, todoItem) {
-  return Dismissible(
-    key: Key(todoItem.hashCode.toString()),
-    child: Container(
-      margin: EdgeInsets.all(2),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(
-          const Radius.circular(7.0),
-        ),
-        shape: BoxShape.rectangle,
-        border: Border.all(),
-        color: Colors.lightGreen.shade100,
-      ),
-      child: ListTile(
-        isThreeLine: true,
-        subtitle: Text('Detailes'),
-        title: Text(
-          todoItem.getTitle(),
-          style: TextStyle(
-            fontSize: 20.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        trailing: Checkbox(
-          value: boxStatus,
-          onChanged: (bool changeState) {
-            setState(() {
-              boxStatus = !boxStatus;
-              print(boxStatus);
-            });
-          },
-        ),
-      ),
-    ),
-    onDismissed: (direction) => print(''),
-    background: Container(
-      color: Colors.green,
-    ),
-  );
-}
-*/
