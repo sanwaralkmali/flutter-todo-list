@@ -119,4 +119,9 @@ class DatabaseHelper {
     Database db = await instance.database;
     return await db.delete(TABLE_TODO);
   }
+
+  Future<int> deleteallHistory() async {
+    Database db = await instance.database;
+    return await db.delete(HISTORY_TABLE);
+  }
 }
