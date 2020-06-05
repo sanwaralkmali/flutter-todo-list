@@ -34,6 +34,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<TodoItem> items = new List<TodoItem>();
+  List<TodoItem> done = new List<TodoItem>();
+  List<TodoItem> undone = new List<TodoItem>();
 
   void refreshItems(items) {
     setState(() {
@@ -53,7 +55,8 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ),
-      appBar: myappBar(context, widget.title),
+      appBar:
+          myappBar(context, widget.title, refreshItems, items, done, undone),
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -80,7 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return ListView.builder(
       itemCount: items.length,
       itemBuilder: (BuildContext context, int index) {
-        return buildItem(items[index], index, items, setState);
+        return buildItem(items[index], index, items, setState, done, undone);
       },
     );
   }

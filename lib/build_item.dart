@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'todo-item.dart';
 
-Widget buildItem(TodoItem item, index, items, setState) {
+Widget buildItem(TodoItem item, index, items, setState, done, undone) {
   return Dismissible(
     key: Key('${item.hashCode}'),
     background: Container(color: Colors.red[700]),
-    onDismissed: (direction) => _removeItemFromList(item, items),
+    onDismissed: (direction) =>
+        _removeItemFromList(item, items, setState, done, undone),
     direction: DismissDirection.startToEnd,
     child: buildListTile(item, index, setState),
   );
@@ -40,7 +41,9 @@ Widget buildListTile(item, index, setState) {
   );
 }
 
-void goToEditItemView(item) {}
+void goToEditItemView(item) {
+  print(item.title);
+}
 
 void changeItemCompleteness(TodoItem item, setState) {
   setState(() {
@@ -48,6 +51,13 @@ void changeItemCompleteness(TodoItem item, setState) {
   });
 }
 
-void _removeItemFromList(item, items) {
-  items.remove(item);
+void _removeItemFromList(item, items, setState, done, undone) {
+  setState(() {
+    if (item.completed)
+      done.insert(0, new TodoItem(title: item.title));
+    else
+      undone.insert(0, new TodoItem(title: item.title));
+
+    items.remove(item);
+  });
 }

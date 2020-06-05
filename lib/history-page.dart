@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:todo/todo-item.dart';
 
 class SecondRoute extends StatelessWidget {
+  final Function refreshItems;
+  final List<TodoItem> items;
+  final List<TodoItem> done;
+  final List<TodoItem> undone;
+  SecondRoute(this.refreshItems, this.items, this.done, this.undone);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -12,7 +18,10 @@ class SecondRoute extends StatelessWidget {
               child: Icon(
                 Icons.arrow_back,
               ),
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () {
+                //refreshItems(items);
+                Navigator.of(context, rootNavigator: true).pop('dialog');
+              },
             ),
             bottom: TabBar(
               tabs: <Widget>[
@@ -23,17 +32,21 @@ class SecondRoute extends StatelessWidget {
           ),
           body: TabBarView(
             children: <Widget>[
-              Text(
-                'These are the compeleted tasks ! ',
-                style: TextStyle(
-                  color: Colors.green,
-                ),
+              ListView.builder(
+                itemCount: done.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Container(
+                    child: Text(done[index].title),
+                  );
+                },
               ),
-              Text(
-                'These are the uncompeleted tasks ! ',
-                style: TextStyle(
-                  color: Colors.red,
-                ),
+              ListView.builder(
+                itemCount: undone.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Container(
+                    child: Text(undone[index].title),
+                  );
+                },
               ),
             ],
           ),

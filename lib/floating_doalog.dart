@@ -41,9 +41,7 @@ Future showdialog(context, items, setState, refreshItems) {
                     if (todoTitle == '') {
                       wrongInput = true;
                     } else {
-                      print(items);
                       items.insert(0, new TodoItem(title: todoTitle));
-                      print(items);
                       wrongInput = false;
                       todoTitle = '';
                       refreshItems(items);
