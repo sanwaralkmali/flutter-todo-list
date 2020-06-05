@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo/todo-item.dart';
 
+import 'Database/datab.dart';
 import 'build_item.dart';
 import 'floating_doalog.dart';
 import 'my_app_bar.dart';
@@ -33,13 +34,41 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<TodoItem> items = new List<TodoItem>();
+  List<TodoItem> items;
   List<TodoItem> done = new List<TodoItem>();
   List<TodoItem> undone = new List<TodoItem>();
+  final dbHelper = DatabaseHelper.instance;
+
+  @override
+  void initState() {
+    getal();
+    super.initState();
+  }
+
+  void getal() async {
+    items = new List<TodoItem>();
+    final allRows = await dbHelper.queryAllRows();
+    print('query all rows:');
+    allRows.forEach((row) {
+      print(row.toString());
+      int id;
+      String itemtitle;
+      row.forEach((key, value) {
+        if (key == 'title') itemtitle = value;
+        if (key == '_id') id = value;
+      });
+
+      setState(() {
+        items.insert(0, new TodoItem(title: itemtitle, id: id));
+      });
+
+      print(items.length);
+    });
+  }
 
   void refreshItems(items) {
     setState(() {
-      this.items = items;
+      getal();
     });
   }
 
@@ -49,14 +78,13 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           setState(() {
-            showdialog(context, items, setState, refreshItems);
+            showdialog(dbHelper, context, items, setState, refreshItems);
           });
         },
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ),
-      appBar:
-          myappBar(context, widget.title, refreshItems, items, done, undone),
+      appBar: myappBar(dbHelper, context, widget.title, refreshItems),
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -83,7 +111,8 @@ class _MyHomePageState extends State<MyHomePage> {
     return ListView.builder(
       itemCount: items.length,
       itemBuilder: (BuildContext context, int index) {
-        return buildItem(items[index], index, items, setState, done, undone);
+        return buildItem(
+            dbHelper, items[index], index, items, setState, done, undone);
       },
     );
   }

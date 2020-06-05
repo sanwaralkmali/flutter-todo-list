@@ -2,18 +2,16 @@ import 'package:flutter/material.dart';
 
 import 'history-page.dart';
 
-AppBar myappBar(context, String title, refreshItems, items, done, undone) {
+AppBar myappBar(dbHelper, context, String title, refreshItems) {
   return AppBar(
     actions: [
       FlatButton(
         padding: EdgeInsets.all(0),
         onPressed: () {
-          refreshItems(items);
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) =>
-                  SecondRoute(refreshItems, items, done, undone),
+              builder: (context) => SecondRoute(dbHelper, refreshItems),
             ),
           );
         },
